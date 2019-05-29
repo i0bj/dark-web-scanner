@@ -44,8 +44,10 @@ def main():
 
         api_params = "{}".format(api_prefix)
         url_response = requests.get(api_params, params=query)
-        # if url_response == 200:
-        print(url_response.json())
+        if url_response.status_code != 200:
+            print("[-] Can't access the Deep Web at the moment")
+        else:
+            print(url_response.json())
 
     tor_crawl()
 
