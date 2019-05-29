@@ -44,8 +44,11 @@ def main():
 
         api_params = "{}".format(api_prefix)
         url_response = requests.get(api_params, params=query)
+        data = url_response.json()
         if url_response.status_code != 200:
             print("[-] Can't access the Deep Web at the moment")
+        elif data["total"] == 0:
+            print("No results found on the Deep Web")
         else:
             print(url_response.json())
 
