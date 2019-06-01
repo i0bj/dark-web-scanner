@@ -1,26 +1,15 @@
-#! /usr/bin/python
-
-import sys
-import time
-import requests
-import argparse
-
-
-# Api rate limit is 30 queries per minute
-
-
-
 def main():
 
-    parser = argparse.ArgumentParser("This program will scan the dark web for specified content")
+    parser = argparse.ArgumentParser("This program will scan the dark web for any specified content")
 
-    parser.add_argument("-k", "--keyword", help="This will search for any search term ex: 'John Doe'")
+    parser.add_argument("-k", "--keyword", help="This will search for any search term ex: 'John Doe")
     args = parser.parse_args()
 
     global keyword
 
     keyword = args.keyword
 
+    # Use 'AND' for explicit results
     # This will query the Dark Search API for information found on the dark web.
     api_prefix = "https://darksearch.io/api/search"
     query = {"query": keyword,
@@ -42,13 +31,35 @@ def main():
             update_progress("Scanning DeepWeb for " + keyword, i/100.0)
         update_progress(keyword, 1)
 
-        api_params = "{}".format(api_prefix)
-        url_response = requests.get(api_params, params=query)
+        url_response = requests.get(api_prefix, params=query)
         data = url_response.json()
         if url_response.status_code != 200:
-            print("[-] Can't access the Deep Web at the moment")
+            print("[-] Can't access the Deep Web")
         elif data["total"] == 0:
             print("No results found on the Deep Web")
+        elif data["total"] >= 1:
+            print("Results found, please check email.")
+            # gmail_password = input("Type your password and press enter: ")
+            port = 587 # smtp port
+            smtp_server = "smtp.gmail.com"
+            sender_email = "Enter your email address here"  # sending address
+            gmail_password = "If you want a hardcoded password, do not recommend" # Hard coded password
+            receiver_email = "Enter the receiving email" # Enter the address you want to receive the email
+            subject = "Enter the email subject here"
+            message = "Enter"
+
+            eml = MIMEMultipart()
+            eml["From"] = sender_email
+            eml["To"] = receiver_email
+            eml["Subject"] = subject
+
+            eml.attach(MIMEText(message, "plain"))
+
+            server = smtplib.SMTP(smtp_server, port)
+            server.starttls()
+            server.login(sender_email, gmail_password)
+            text = eml.as_string()
+            server.sendmail(sender_email, receiver_email, text)
         else:
             print(url_response.json())
 
