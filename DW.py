@@ -33,6 +33,8 @@ def main():
 
         url_response = requests.get(api_prefix, params=query)
         data = url_response.json()
+        # Changed header from generic Python header
+        url_response.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
         if url_response.status_code != 200:
             print("[-] Can't access the Deep Web")
         elif data["total"] == 0:
@@ -60,8 +62,6 @@ def main():
             server.login(sender_email, gmail_password)
             text = eml.as_string()
             server.sendmail(sender_email, receiver_email, text)
-        else:
-            print(url_response.json())
 
     tor_crawl()
 
