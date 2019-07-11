@@ -44,14 +44,17 @@ def main():
 
         url_response = requests.get(api_prefix, params=query)
         data = url_response.json()
+        
         # Changed header from generic Python header
         url_response.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+        
         if url_response.status_code != 200:
             print("[-] Can't access the Deep Web")
         elif data["total"] == 0:
             print("No results found on the Deep Web")
         elif data["total"] >= 1:
             print("Results found, please check email.")
+            
             # gmail_password = input("Type your password and press enter: ")
             port = 587 # smtp port
             smtp_server = "smtp.gmail.com"
